@@ -3,78 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Influencer Pro - Dashboard</title>
+    <title>AI Influencer Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/lucide-static@0.344.0/font/lucide.min.css" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #e5e5e5; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .gradient-text { background: linear-gradient(90deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body { background-color: #09090b; color: #fafafa; }
+        .glass { background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(12px); border: 1px solid #27272a; }
+        .gradient-border { background: linear-gradient(to right, #8b5cf6, #ec4899); height: 2px; width: 100%; }
     </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="flex flex-col min-h-screen">
 
-    <header class="p-6 border-b border-zinc-800 flex justify-between items-center glass sticky top-0 z-50">
-        <h1 class="text-xl font-black tracking-tighter gradient-text">INFLUENCER.AI</h1>
-        <span class="text-[10px] bg-zinc-800 px-2 py-1 rounded-full text-zinc-400">STATUS: CLOUD ACTIVE</span>
+    <header class="p-5 glass sticky top-0 z-50">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+                INFLUENCER ENGINE
+            </h1>
+            <div id="status" class="w-3 h-3 bg-green-500 rounded-full shadow-[0_0_10px_#22c55e]"></div>
+        </div>
     </header>
 
-    <main class="p-4 space-y-6 max-w-lg mx-auto">
+    <main class="flex-grow p-4 max-w-md mx-auto w-full space-y-6">
         
-        <section class="glass p-4 rounded-3xl">
-            <h2 class="text-sm font-bold mb-2 flex items-center gap-2">
-                <i class="lucide-info text-purple-500 w-4"></i> Como Criar
-            </h2>
-            <ol class="text-xs text-zinc-400 space-y-1 list-decimal ml-4">
-                <li>Gere a voz no módulo de Áudio.</li>
-                <li>Crie o vídeo usando sua foto de referência no LivePortrait.</li>
-                <li>Junte os dois no CapCut/InShot.</li>
-            </ol>
+        <section class="glass p-5 rounded-3xl space-y-4">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-zinc-500">1. Identidade (FaceID)</h2>
+            <div class="border-2 border-dashed border-zinc-800 rounded-2xl p-8 text-center hover:border-purple-500 transition cursor-pointer">
+                <i class="lucide-image-plus w-8 h-8 mx-auto mb-2 text-zinc-600"></i>
+                <p class="text-xs text-zinc-500">Suba a foto da fisionomia base</p>
+                <input type="file" id="faceInput" class="hidden" accept="image/*">
+            </div>
         </section>
 
-        <div class="grid gap-4">
+        <section class="glass p-5 rounded-3xl space-y-4">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-zinc-500">2. Roteiro e Ação</h2>
+            <textarea id="promptText" rows="4" 
+                class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-sm focus:ring-2 focus:ring-purple-500 outline-none transition"
+                placeholder="O que a influencer deve dizer ou fazer?"></textarea>
             
-            <div class="glass p-5 rounded-3xl group active:scale-95 transition">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="bg-purple-500/20 p-3 rounded-2xl">
-                        <i class="lucide-video text-purple-500"></i>
-                    </div>
-                </div>
-                <h3 class="font-bold text-lg">Módulo de Vídeo (Reels)</h3>
-                <p class="text-sm text-zinc-500 mb-4">Animação de fisionomia e sincronia labial grátis.</p>
-                <a href="https://huggingface.co/spaces/Kwai-VGI/LivePortrait" target="_blank" class="block text-center bg-white text-black py-3 rounded-xl font-bold text-sm">ABRIR MOTOR DE VÍDEO</a>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="generate('photo')" class="bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-xs font-bold transition">GERAR FOTO</button>
+                <button onclick="generate('video')" class="bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-xs font-bold transition">GERAR REELS</button>
             </div>
+        </section>
 
-            <div class="glass p-5 rounded-3xl active:scale-95 transition">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="bg-blue-500/20 p-3 rounded-2xl">
-                        <i class="lucide-camera text-blue-500"></i>
-                    </div>
-                </div>
-                <h3 class="font-bold text-lg">Módulo de Foto (FaceID)</h3>
-                <p class="text-sm text-zinc-500 mb-4">Gere novos ensaios fotográficos com o mesmo rosto.</p>
-                <a href="https://huggingface.co/spaces/InstantID/InstantID" target="_blank" class="block text-center bg-zinc-800 text-white py-3 rounded-xl font-bold text-sm">GERAR FOTOS</a>
+        <button onclick="processIA()" id="btnAction" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-2xl font-bold text-lg shadow-lg shadow-purple-500/20 active:scale-95 transition">
+            RENDERIZAR CONTEÚDO
+        </button>
+
+        <div id="previewArea" class="hidden glass p-4 rounded-3xl text-center">
+            <p class="text-xs text-zinc-400 mb-4">Resultado da IA:</p>
+            <div id="resultContainer" class="rounded-xl overflow-hidden bg-black aspect-[9/16] flex items-center justify-center">
+                <span class="animate-pulse text-purple-500">Processando...</span>
             </div>
-
-            <div class="glass p-5 rounded-3xl active:scale-95 transition">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="bg-green-500/20 p-3 rounded-2xl">
-                        <i class="lucide-mic text-green-500"></i>
-                    </div>
-                </div>
-                <h3 class="font-bold text-lg">Módulo de Voz</h3>
-                <p class="text-sm text-zinc-500 mb-4">Clone sua voz ou de qualquer referência.</p>
-                <a href="https://huggingface.co/spaces/RVC-Boss/GPT-SoVITS" target="_blank" class="block text-center bg-zinc-800 text-white py-3 rounded-xl font-bold text-sm">CLONAR VOZ</a>
-            </div>
-
         </div>
+
     </main>
 
-    <nav class="fixed bottom-0 left-0 right-0 p-4 glass border-t border-zinc-800 flex justify-around">
-        <i class="lucide-home text-purple-500"></i>
-        <i class="lucide-plus-circle text-zinc-500"></i>
-        <i class="lucide-user text-zinc-500"></i>
-    </nav>
+    <script>
+        async function processIA() {
+            const btn = document.getElementById('btnAction');
+            const preview = document.getElementById('previewArea');
+            const prompt = document.getElementById('promptText').value;
 
+            if(!prompt) return alert("Por favor, digite um roteiro.");
+
+            btn.disabled = true;
+            btn.innerText = "CONECTANDO À API...";
+            preview.classList.remove('hidden');
+
+            try {
+                // Chama a sua API na Vercel
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        mode: 'video'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if(data.status === "success") {
+                    btn.innerText = "CONCLUÍDO!";
+                    // Lógica para exibir o vídeo ou áudio gerado
+                }
+            } catch (err) {
+                console.error(err);
+                btn.innerText = "ERRO NA CONEXÃO";
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
