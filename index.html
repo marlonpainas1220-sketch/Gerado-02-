@@ -1,1 +1,1667 @@
-
++    1 <!DOCTYPE html>
++    2 <html lang="pt-BR">
++    3 <head>
++    4   <meta charset="UTF-8">
++    5   <meta name="viewport" content="width=device-width, initial-scale=1.0">
++    6   <title>CINEPROD — Central de Produção IA</title>
++    7   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
++    8   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
++    9   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
++   10   <style>
++   11     :root {
++   12       --bg-primary: #08080a;
++   13       --bg-secondary: #0e0e14;
++   14       --bg-card: #141420;
++   15       --bg-elevated: #1c1c2a;
++   16       --bg-hover: #24243a;
++   17       --accent-gold: #d4af37;
++   18       --accent-gold-bright: #f5d76e;
++   19       --accent-gold-dim: #a8892c;
++   20       --accent-red: #ff4757;
++   21       --accent-green: #2ed573;
++   22       --accent-blue: #5352ed;
++   23       --accent-purple: #a855f7;
++   24       --accent-cyan: #00d4ff;
++   25       --text-primary: #f8f8fc;
++   26       --text-secondary: #a0a0b8;
++   27       --text-muted: #5a5a72;
++   28       --border-color: #2a2a40;
++   29       --border-glow: rgba(212, 175, 55, 0.3);
++   30       --gradient-gold: linear-gradient(135deg, #d4af37 0%, #f5d76e 50%, #d4af37 100%);
++   31       --gradient-dark: linear-gradient(180deg, #08080a 0%, #0e0e14 100%);
++   32       --gradient-card: linear-gradient(145deg, #141420 0%, #0e0e14 100%);
++   33       --gradient-glow: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
++   34       --shadow-glow: 0 0 60px rgba(212, 175, 55, 0.2);
++   35       --shadow-card: 0 8px 32px rgba(0,0,0,0.5);
++   36       --shadow-float: 0 20px 40px rgba(0,0,0,0.4);
++   37     }
++   38 
++   39     * {
++   40       margin: 0;
++   41       padding: 0;
++   42       box-sizing: border-box;
++   43     }
++   44 
++   45     html {
++   46       scroll-behavior: smooth;
++   47     }
++   48 
++   49     body {
++   50       font-family: 'Inter', sans-serif;
++   51       background: var(--bg-primary);
++   52       color: var(--text-primary);
++   53       min-height: 100vh;
++   54       overflow-x: hidden;
++   55       background-image: 
++   56         radial-gradient(ellipse at top, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
++   57         radial-gradient(ellipse at bottom right, rgba(168, 137, 44, 0.02) 0%, transparent 50%);
++   58     }
++   59 
++   60     /* Scrollbar */
++   61     ::-webkit-scrollbar {
++   62       width: 6px;
++   63       height: 6px;
++   64     }
++   65 
++   66     ::-webkit-scrollbar-track {
++   67       background: var(--bg-secondary);
++   68     }
++   69 
++   70     ::-webkit-scrollbar-thumb {
++   71       background: var(--border-color);
++   72       border-radius: 3px;
++   73     }
++   74 
++   75     ::-webkit-scrollbar-thumb:hover {
++   76       background: var(--accent-gold-dim);
++   77     }
++   78 
++   79     /* Header */
++   80     .header {
++   81       position: fixed;
++   82       top: 0;
++   83       left: 0;
++   84       right: 0;
++   85       height: 64px;
++   86       background: rgba(8, 8, 10, 0.9);
++   87       backdrop-filter: blur(20px);
++   88       -webkit-backdrop-filter: blur(20px);
++   89       border-bottom: 1px solid var(--border-color);
++   90       display: flex;
++   91       align-items: center;
++   92       justify-content: space-between;
++   93       padding: 0 16px;
++   94       z-index: 100;
++   95     }
++   96 
++   97     .menu-btn {
++   98       width: 44px;
++   99       height: 44px;
++  100       background: transparent;
++  101       border: none;
++  102       color: var(--text-primary);
++  103       font-size: 20px;
++  104       cursor: pointer;
++  105       border-radius: 12px;
++  106       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
++  107       display: flex;
++  108       align-items: center;
++  109       justify-content: center;
++  110     }
++  111 
++  112     .menu-btn:hover {
++  113       background: var(--bg-elevated);
++  114       color: var(--accent-gold);
++  115       transform: scale(1.05);
++  116     }
++  117 
++  118     .menu-btn:active {
++  119       transform: scale(0.95);
++  120     }
++  121 
++  122     .logo {
++  123       font-family: 'Bebas Neue', sans-serif;
++  124       font-size: 26px;
++  125       letter-spacing: 6px;
++  126       background: var(--gradient-gold);
++  127       -webkit-background-clip: text;
++  128       -webkit-text-fill-color: transparent;
++  129       background-clip: text;
++  130       text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
++  131       position: relative;
++  132     }
++  133 
++  134     .logo::after {
++  135       content: '';
++  136       position: absolute;
++  137       bottom: -4px;
++  138       left: 50%;
++  139       transform: translateX(-50%);
++  140       width: 30px;
++  141       height: 2px;
++  142       background: var(--gradient-gold);
++  143       border-radius: 1px;
++  144     }
++  145 
++  146     .status-indicator {
++  147       display: flex;
++  148       align-items: center;
++  149       gap: 8px;
++  150       padding: 8px 14px;
++  151       background: var(--bg-card);
++  152       border: 1px solid var(--border-color);
++  153       border-radius: 24px;
++  154       font-size: 11px;
++  155       font-weight: 600;
++  156       text-transform: uppercase;
++  157       letter-spacing: 1px;
++  158     }
++  159 
++  160     .status-dot {
++  161       width: 8px;
++  162       height: 8px;
++  163       border-radius: 50%;
++  164       background: var(--accent-green);
++  165       box-shadow: 0 0 12px var(--accent-green);
++  166       animation: pulse-glow 2s infinite;
++  167     }
++  168 
++  169     @keyframes pulse-glow {
++  170       0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--accent-green); }
++  171       50% { opacity: 0.6; box-shadow: 0 0 4px var(--accent-green); }
++  172     }
++  173 
++  174     /* Menu Overlay */
++  175     .menu-overlay {
++  176       position: fixed;
++  177       top: 0;
++  178       left: 0;
++  179       right: 0;
++  180       bottom: 0;
++  181       background: rgba(0,0,0,0.8);
++  182       backdrop-filter: blur(8px);
++  183       -webkit-backdrop-filter: blur(8px);
++  184       z-index: 200;
++  185       opacity: 0;
++  186       visibility: hidden;
++  187       transition: all 0.3s ease;
++  188     }
++  189 
++  190     .menu-overlay.active {
++  191       opacity: 1;
++  192       visibility: visible;
++  193     }
++  194 
++  195     .menu-sheet {
++  196       position: fixed;
++  197       top: 0;
++  198       left: 0;
++  199       width: 300px;
++  200       max-width: 85vw;
++  201       height: 100%;
++  202       background: var(--bg-secondary);
++  203       border-right: 1px solid var(--border-color);
++  204       z-index: 201;
++  205       transform: translateX(-100%);
++  206       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
++  207       display: flex;
++  208       flex-direction: column;
++  209       overflow: hidden;
++  210     }
++  211 
++  212     .menu-sheet.active {
++  213       transform: translateX(0);
++  214     }
++  215 
++  216     .menu-header {
++  217       padding: 28px 24px;
++  218       border-bottom: 1px solid var(--border-color);
++  219       background: var(--gradient-glow);
++  220     }
++  221 
++  222     .menu-header h2 {
++  223       font-family: 'Bebas Neue', sans-serif;
++  224       font-size: 32px;
++  225       letter-spacing: 4px;
++  226       background: var(--gradient-gold);
++  227       -webkit-background-clip: text;
++  228       -webkit-text-fill-color: transparent;
++  229       background-clip: text;
++  230     }
++  231 
++  232     .menu-header p {
++  233       color: var(--text-muted);
++  234       font-size: 12px;
++  235       margin-top: 6px;
++  236       letter-spacing: 0.5px;
++  237     }
++  238 
++  239     .menu-items {
++  240       flex: 1;
++  241       padding: 20px 16px;
++  242       overflow-y: auto;
++  243     }
++  244 
++  245     .menu-section-title {
++  246       font-size: 10px;
++  247       font-weight: 700;
++  248       color: var(--text-muted);
++  249       text-transform: uppercase;
++  250       letter-spacing: 2px;
++  251       padding: 12px 16px 8px;
++  252       margin-top: 8px;
++  253     }
++  254 
++  255     .menu-item {
++  256       display: flex;
++  257       align-items: center;
++  258       gap: 14px;
++  259       padding: 14px 16px;
++  260       border-radius: 14px;
++  261       cursor: pointer;
++  262       transition: all 0.25s ease;
++  263       margin-bottom: 4px;
++  264       color: var(--text-secondary);
++  265       position: relative;
++  266       overflow: hidden;
++  267     }
++  268 
++  269     .menu-item::before {
++  270       content: '';
++  271       position: absolute;
++  272       left: 0;
++  273       top: 0;
++  274       bottom: 0;
++  275       width: 3px;
++  276       background: var(--accent-gold);
++  277       transform: scaleY(0);
++  278       transition: transform 0.25s ease;
++  279       border-radius: 0 3px 3px 0;
++  280     }
++  281 
++  282     .menu-item:hover {
++  283       background: var(--bg-elevated);
++  284       color: var(--text-primary);
++  285       transform: translateX(4px);
++  286     }
++  287 
++  288     .menu-item.active {
++  289       background: rgba(212, 175, 55, 0.1);
++  290       color: var(--accent-gold);
++  291       border: 1px solid rgba(212, 175, 55, 0.2);
++  292     }
++  293 
++  294     .menu-item.active::before {
++  295       transform: scaleY(1);
++  296     }
++  297 
++  298     .menu-item i {
++  299       width: 24px;
++  300       text-align: center;
++  301       font-size: 18px;
++  302     }
++  303 
++  304     .menu-item span {
++  305       font-weight: 500;
++  306       font-size: 14px;
++  307     }
++  308 
++  309     .menu-item .badge-inline {
++  310       margin-left: auto;
++  311       background: var(--accent-red);
++  312       color: white;
++  313       font-size: 10px;
++  314       font-weight: 700;
++  315       padding: 2px 8px;
++  316       border-radius: 10px;
++  317     }
++  318 
++  319     .menu-footer {
++  320       padding: 20px;
++  321       border-top: 1px solid var(--border-color);
++  322       background: var(--bg-card);
++  323     }
++  324 
++  325     .menu-footer-info {
++  326       display: flex;
++  327       align-items: center;
++  328       gap: 12px;
++  329     }
++  330 
++  331     .avatar-mini {
++  332       width: 44px;
++  333       height: 44px;
++  334       border-radius: 12px;
++  335       background: var(--gradient-gold);
++  336       display: flex;
++  337       align-items: center;
++  338       justify-content: center;
++  339       font-weight: 700;
++  340       font-size: 16px;
++  341       color: var(--bg-primary);
++  342       box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
++  343     }
++  344 
++  345     .menu-footer-text h4 {
++  346       font-size: 14px;
++  347       font-weight: 600;
++  348     }
++  349 
++  350     .menu-footer-text p {
++  351       font-size: 12px;
++  352       color: var(--text-muted);
++  353     }
++  354 
++  355     /* Main Content */
++  356     .main {
++  357       padding-top: 64px;
++  358       min-height: 100vh;
++  359       padding-bottom: 100px;
++  360     }
++  361 
++  362     .page {
++  363       display: none;
++  364       padding: 24px 16px;
++  365       animation: pageIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
++  366     }
++  367 
++  368     .page.active {
++  369       display: block;
++  370     }
++  371 
++  372     @keyframes pageIn {
++  373       from { 
++  374         opacity: 0; 
++  375         transform: translateY(20px) scale(0.98); 
++  376       }
++  377       to { 
++  378         opacity: 1; 
++  379         transform: translateY(0) scale(1); 
++  380       }
++  381     }
++  382 
++  383     .page-header {
++  384       margin-bottom: 28px;
++  385     }
++  386 
++  387     .page-title {
++  388       font-family: 'Bebas Neue', sans-serif;
++  389       font-size: 36px;
++  390       letter-spacing: 3px;
++  391       margin-bottom: 8px;
++  392       display: flex;
++  393       align-items: center;
++  394       gap: 12px;
++  395     }
++  396 
++  397     .page-title-icon {
++  398       width: 48px;
++  399       height: 48px;
++  400       border-radius: 14px;
++  401       background: rgba(212, 175, 55, 0.1);
++  402       border: 1px solid rgba(212, 175, 55, 0.2);
++  403       display: flex;
++  404       align-items: center;
++  405       justify-content: center;
++  406       color: var(--accent-gold);
++  407       font-size: 20px;
++  408     }
++  409 
++  410     .page-subtitle {
++  411       color: var(--text-muted);
++  412       font-size: 14px;
++  413       display: flex;
++  414       align-items: center;
++  415       gap: 8px;
++  416     }
++  417 
++  418     .page-subtitle i {
++  419       color: var(--accent-gold);
++  420     }
++  421 
++  422     /* Cards */
++  423     .card {
++  424       background: var(--gradient-card);
++  425       border-radius: 20px;
++  426       border: 1px solid var(--border-color);
++  427       padding: 24px;
++  428       margin-bottom: 20px;
++  429       position: relative;
++  430       overflow: hidden;
++  431       transition: all 0.3s ease;
++  432     }
++  433 
++  434     .card::before {
++  435       content: '';
++  436       position: absolute;
++  437       top: 0;
++  438       left: 0;
++  439       right: 0;
++  440       height: 1px;
++  441       background: linear-gradient(90deg, transparent, var(--accent-gold-dim), transparent);
++  442       opacity: 0;
++  443       transition: opacity 0.3s ease;
++  444     }
++  445 
++  446     .card:hover::before {
++  447       opacity: 1;
++  448     }
++  449 
++  450     .card-glow {
++  451       box-shadow: var(--shadow-glow);
++  452       border-color: var(--border-glow);
++  453     }
++  454 
++  455     .card-header {
++  456       display: flex;
++  457       align-items: center;
++  458       justify-content: space-between;
++  459       margin-bottom: 20px;
++  460     }
++  461 
++  462     .card-title {
++  463       font-size: 12px;
++  464       font-weight: 700;
++  465       color: var(--text-secondary);
++  466       text-transform: uppercase;
++  467       letter-spacing: 2px;
++  468       display: flex;
++  469       align-items: center;
++  470       gap: 10px;
++  471     }
++  472 
++  473     .card-title i {
++  474       color: var(--accent-gold);
++  475     }
++  476 
++  477     .card-badge {
++  478       padding: 6px 12px;
++  479       border-radius: 20px;
++  480       font-size: 11px;
++  481       font-weight: 600;
++  482       background: rgba(212, 175, 55, 0.1);
++  483       color: var(--accent-gold);
++  484       border: 1px solid rgba(212, 175, 55, 0.2);
++  485     }
++  486 
++  487     /* Stats Grid */
++  488     .stats-grid {
++  489       display: grid;
++  490       grid-template-columns: repeat(2, 1fr);
++  491       gap: 14px;
++  492       margin-bottom: 24px;
++  493     }
++  494 
++  495     .stat-card {
++  496       background: var(--gradient-card);
++  497       border-radius: 18px;
++  498       border: 1px solid var(--border-color);
++  499       padding: 20px;
++  500       position: relative;
++  501       overflow: hidden;
++  502       transition: all 0.3s ease;
++  503       cursor: pointer;
++  504     }
++  505 
++  506     .stat-card::before {
++  507       content: '';
++  508       position: absolute;
++  509       top: 0;
++  510       left: 0;
++  511       right: 0;
++  512       height: 3px;
++  513       background: var(--gradient-gold);
++  514       opacity: 0;
++  515       transition: opacity 0.3s ease;
++  516     }
++  517 
++  518     .stat-card:hover {
++  519       transform: translateY(-4px);
++  520       border-color: var(--border-glow);
++  521     }
++  522 
++  523     .stat-card:hover::before {
++  524       opacity: 1;
++  525     }
++  526 
++  527     .stat-icon {
++  528       width: 44px;
++  529       height: 44px;
++  530       border-radius: 14px;
++  531       display: flex;
++  532       align-items: center;
++  533       justify-content: center;
++  534       margin-bottom: 14px;
++  535       font-size: 20px;
++  536       position: relative;
++  537     }
++  538 
++  539     .stat-icon::after {
++  540       content: '';
++  541       position: absolute;
++  542       inset: 0;
++  543       border-radius: inherit;
++  544       background: inherit;
++  545       filter: blur(12px);
++  546       opacity: 0.4;
++  547       z-index: -1;
++  548     }
++  549 
++  550     .stat-icon.gold { background: rgba(212, 175, 55, 0.15); color: var(--accent-gold); }
++  551     .stat-icon.red { background: rgba(255, 71, 87, 0.15); color: var(--accent-red); }
++  552     .stat-icon.green { background: rgba(46, 213, 115, 0.15); color: var(--accent-green); }
++  553     .stat-icon.blue { background: rgba(83, 82, 237, 0.15); color: var(--accent-blue); }
++  554     .stat-icon.purple { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); }
++  555     .stat-icon.cyan { background: rgba(0, 212, 255, 0.15); color: var(--accent-cyan); }
++  556 
++  557     .stat-value {
++  558       font-size: 32px;
++  559       font-weight: 700;
++  560       font-family: 'Bebas Neue', sans-serif;
++  561       letter-spacing: 2px;
++  562       line-height: 1;
++  563     }
++  564 
++  565     .stat-label {
++  566       font-size: 12px;
++  567       color: var(--text-muted);
++  568       margin-top: 6px;
++  569     }
++  570 
++  571     .stat-change {
++  572       display: inline-flex;
++  573       align-items: center;
++  574       gap: 4px;
++  575       font-size: 11px;
++  576       font-weight: 600;
++  577       padding: 4px 10px;
++  578       border-radius: 8px;
++  579       margin-top: 10px;
++  580     }
++  581 
++  582     .stat-change.up { background: rgba(46, 213, 115, 0.15); color: var(--accent-green); }
++  583     .stat-change.down { background: rgba(255, 71, 87, 0.15); color: var(--accent-red); }
++  584 
++  585     /* Episode List */
++  586     .episode-list {
++  587       display: flex;
++  588       flex-direction: column;
++  589       gap: 12px;
++  590     }
++  591 
++  592     .episode-item {
++  593       display: flex;
++  594       gap: 16px;
++  595       padding: 16px;
++  596       background: var(--bg-elevated);
++  597       border-radius: 16px;
++  598       cursor: pointer;
++  599       transition: all 0.3s ease;
++  600       border: 1px solid transparent;
++  601       position: relative;
++  602       overflow: hidden;
++  603     }
++  604 
++  605     .episode-item::after {
++  606       content: '';
++  607       position: absolute;
++  608       right: 16px;
++  609       top: 50%;
++  610       transform: translateY(-50%);
++  611       font-family: 'Font Awesome 6 Free';
++  612       font-weight: 900;
++  613       content: '\f054';
++  614       color: var(--text-muted);
++  615       opacity: 0;
++  616       transition: all 0.3s ease;
++  617     }
++  618 
++  619     .episode-item:hover {
++  620       border-color: var(--accent-gold);
++  621       transform: translateX(6px);
++  622       background: var(--bg-hover);
++  623     }
++  624 
++  625     .episode-item:hover::after {
++  626       opacity: 1;
++  627       right: 20px;
++  628     }
++  629 
++  630     .episode-thumb {
++  631       width: 56px;
++  632       height: 72px;
++  633       border-radius: 12px;
++  634       background: var(--gradient-gold);
++  635       display: flex;
++  636       align-items: center;
++  637       justify-content: center;
++  638       font-family: 'Bebas Neue', sans-serif;
++  639       font-size: 22px;
++  640       color: var(--bg-primary);
++  641       flex-shrink: 0;
++  642       box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
++  643     }
++  644 
++  645     .episode-info {
++  646       flex: 1;
++  647       display: flex;
++  648       flex-direction: column;
++  649       justify-content: center;
++  650       min-width: 0;
++  651     }
++  652 
++  653     .episode-title {
++  654       font-weight: 600;
++  655       font-size: 15px;
++  656       margin-bottom: 6px;
++  657       white-space: nowrap;
++  658       overflow: hidden;
++  659       text-overflow: ellipsis;
++  660     }
++  661 
++  662     .episode-meta {
++  663       font-size: 12px;
++  664       color: var(--text-muted);
++  665       display: flex;
++  666       align-items: center;
++  667       gap: 8px;
++  668       flex-wrap: wrap;
++  669     }
++  670 
++  671     .episode-status {
++  672       padding: 5px 12px;
++  673       border-radius: 8px;
++  674       font-size: 10px;
++  675       font-weight: 700;
++  676       text-transform: uppercase;
++  677       letter-spacing: 0.5px;
++  678       flex-shrink: 0;
++  679     }
++  680 
++  681     .episode-status.ready { background: rgba(46, 213, 115, 0.15); color: var(--accent-green); }
++  682     .episode-status.processing { background: rgba(83, 82, 237, 0.15); color: var(--accent-blue); }
++  683     .episode-status.pending { background: rgba(90, 90, 114, 0.2); color: var(--text-muted); }
++  684     .episode-status.generating { 
++  685       background: rgba(212, 175, 55, 0.15); 
++  686       color: var(--accent-gold);
++  687       animation: blink 1.5s infinite;
++  688     }
++  689 
++  690     @keyframes blink {
++  691       0%, 100% { opacity: 1; }
++  692       50% { opacity: 0.5; }
++  693     }
++  694 
++  695     /* Form Elements */
++  696     .form-group {
++  697       margin-bottom: 24px;
++  698     }
++  699 
++  700     .form-label {
++  701       display: block;
++  702       font-size: 11px;
++  703       font-weight: 700;
++  704       color: var(--text-secondary);
++  705       text-transform: uppercase;
++  706       letter-spacing: 1.5px;
++  707       margin-bottom: 10px;
++  708       display: flex;
++  709       align-items: center;
++  710       gap: 8px;
++  711     }
++  712 
++  713     .form-label i {
++  714       color: var(--accent-gold);
++  715       font-size: 12px;
++  716     }
++  717 
++  718     .form-input, .form-select, .form-textarea {
++  719       width: 100%;
++  720       padding: 16px 18px;
++  721       background: var(--bg-elevated);
++  722       border: 1px solid var(--border-color);
++  723       border-radius: 14px;
++  724       color: var(--text-primary);
++  725       font-size: 16px;
++  726       font-family: 'Inter', sans-serif;
++  727       transition: all 0.25s ease;
++  728     }
++  729 
++  730     .form-input:focus, .form-select:focus, .form-textarea:focus {
++  731       outline: none;
++  732       border-color: var(--accent-gold);
++  733       box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
++  734       background: var(--bg-hover);
++  735     }
++  736 
++  737     .form-input::placeholder, .form-textarea::placeholder {
++  738       color: var(--text-muted);
++  739     }
++  740 
++  741     .form-textarea {
++  742       min-height: 130px;
++  743       resize: vertical;
++  744       line-height: 1.6;
++  745     }
++  746 
++  747     .form-select {
++  748       appearance: none;
++  749       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d4af37' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
++  750       background-repeat: no-repeat;
++  751       background-position: right 18px center;
++  752       padding-right: 44px;
++  753       cursor: pointer;
++  754     }
++  755 
++  756     .form-hint {
++  757       font-size: 12px;
++  758       color: var(--text-muted);
++  759       margin-top: 8px;
++  760       display: flex;
++  761       align-items: center;
++  762       gap: 6px;
++  763     }
++  764 
++  765     .form-hint i {
++  766       color: var(--accent-gold);
++  767     }
++  768 
++  769     /* Buttons */
++  770     .btn {
++  771       display: inline-flex;
++  772       align-items: center;
++  773       justify-content: center;
++  774       gap: 10px;
++  775       padding: 16px 28px;
++  776       border-radius: 14px;
++  777       font-size: 14px;
++  778       font-weight: 600;
++  779       font-family: 'Inter', sans-serif;
++  780       cursor: pointer;
++  781       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
++  782       border: none;
++  783       position: relative;
++  784       overflow: hidden;
++  785     }
++  786 
++  787     .btn::before {
++  788       content: '';
++  789       position: absolute;
++  790       inset: 0;
++  791       background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
++  792       opacity: 0;
++  793       transition: opacity 0.3s ease;
++  794     }
++  795 
++  796     .btn:hover::before {
++  797       opacity: 1;
++  798     }
++  799 
++  800     .btn-primary {
++  801       background: var(--gradient-gold);
++  802       color: var(--bg-primary);
++  803       box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
++  804     }
++  805 
++  806     .btn-primary:hover {
++  807       transform: translateY(-3px);
++  808       box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
++  809     }
++  810 
++  811     .btn-primary:active {
++  812       transform: translateY(-1px);
++  813     }
++  814 
++  815     .btn-secondary {
++  816       background: var(--bg-elevated);
++  817       color: var(--text-primary);
++  818       border: 1px solid var(--border-color);
++  819     }
++  820 
++  821     .btn-secondary:hover {
++  822       border-color: var(--accent-gold);
++  823       color: var(--accent-gold);
++  824       background: var(--bg-hover);
++  825     }
++  826 
++  827     .btn-danger {
++  828       background: rgba(255, 71, 87, 0.15);
++  829       color: var(--accent-red);
++  830       border: 1px solid rgba(255, 71, 87, 0.3);
++  831     }
++  832 
++  833     .btn-danger:hover {
++  834       background: rgba(255, 71, 87, 0.25);
++  835     }
++  836 
++  837     .btn-block {
++  838       width: 100%;
++  839     }
++  840 
++  841     .btn-sm {
++  842       padding: 10px 18px;
++  843       font-size: 12px;
++  844       border-radius: 10px;
++  845     }
++  846 
++  847     .btn:disabled {
++  848       opacity: 0.5;
++  849       cursor: not-allowed;
++  850       transform: none !important;
++  851     }
++  852 
++  853     .btn-loading {
++  854       pointer-events: none;
++  855     }
++  856 
++  857     .btn-loading .btn-text {
++  858       opacity: 0;
++  859     }
++  860 
++  861     .btn-loading .spinner-inline {
++  862       position: absolute;
++  863     }
++  864 
++  865     /* Upload Zone */
++  866     .upload-zone {
++  867       border: 2px dashed var(--border-color);
++  868       border-radius: 20px;
++  869       padding: 48px 24px;
++  870       text-align: center;
++  871       cursor: pointer;
++  872       transition: all 0.3s ease;
++  873       background: var(--bg-elevated);
++  874       position: relative;
++  875       overflow: hidden;
++  876     }
++  877 
++  878     .upload-zone::before {
++  879       content: '';
++  880       position: absolute;
++  881       inset: 0;
++  882       background: var(--gradient-glow);
++  883       opacity: 0;
++  884       transition: opacity 0.3s ease;
++  885     }
++  886 
++  887     .upload-zone:hover {
++  888       border-color: var(--accent-gold);
++  889       background: var(--bg-hover);
++  890     }
++  891 
++  892     .upload-zone:hover::before {
++  893       opacity: 1;
++  894     }
++  895 
++  896     .upload-zone i {
++  897       font-size: 52px;
++  898       color: var(--accent-gold);
++  899       margin-bottom: 18px;
++  900       position: relative;
++  901     }
++  902 
++  903     .upload-zone h4 {
++  904       font-size: 17px;
++  905       margin-bottom: 10px;
++  906       position: relative;
++  907     }
++  908 
++  909     .upload-zone p {
++  910       font-size: 13px;
++  911       color: var(--text-muted);
++  912       position: relative;
++  913     }
++  914 
++  915     /* Avatar Preview */
++  916     .avatar-preview {
++  917       display: flex;
++  918       align-items: center;
++  919       gap: 24px;
++  920       padding: 24px;
++  921       background: var(--bg-elevated);
++  922       border-radius: 20px;
++  923       margin-bottom: 24px;
++  924       border: 1px solid var(--border-color);
++  925     }
++  926 
++  927     .avatar-image {
++  928       width: 110px;
++  929       height: 146px;
++  930       border-radius: 16px;
++  931       background: linear-gradient(135deg, #2a2a3a 0%, #1a1a24 100%);
++  932       display: flex;
++  933       align-items: center;
++  934       justify-content: center;
++  935       overflow: hidden;
++  936       border: 2px solid var(--accent-gold);
++  937       box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
++  938       flex-shrink: 0;
++  939     }
++  940 
++  941     .avatar-image img {
++  942       width: 100%;
++  943       height: 100%;
++  944       object-fit: cover;
++  945     }
++  946 
++  947     .avatar-image i {
++  948       font-size: 40px;
++  949       color: var(--text-muted);
++  950     }
++  951 
++  952     .avatar-details h3 {
++  953       font-size: 20px;
++  954       margin-bottom: 10px;
++  955       font-family: 'Bebas Neue', sans-serif;
++  956       letter-spacing: 1px;
++  957     }
++  958 
++  959     .avatar-details p {
++  960       font-size: 13px;
++  961       color: var(--text-muted);
++  962       line-height: 1.6;
++  963     }
++  964 
++  965     /* Tabs */
++  966     .tabs {
++  967       display: flex;
++  968       gap: 10px;
++  969       margin-bottom: 24px;
++  970       overflow-x: auto;
++  971       padding-bottom: 6px;
++  972       -webkit-overflow-scrolling: touch;
++  973     }
++  974 
++  975     .tabs::-webkit-scrollbar {
++  976       display: none;
++  977     }
++  978 
++  979     .tab {
++  980       padding: 12px 20px;
++  981       background: var(--bg-elevated);
++  982       border: 1px solid var(--border-color);
++  983       border-radius: 12px;
++  984       font-size: 13px;
++  985       font-weight: 600;
++  986       color: var(--text-secondary);
++  987       cursor: pointer;
++  988       transition: all 0.25s ease;
++  989       white-space: nowrap;
++  990     }
++  991 
++  992     .tab:hover {
++  993       color: var(--text-primary);
++  994       background: var(--bg-hover);
++  995     }
++  996 
++  997     .tab.active {
++  998       background: rgba(212, 175, 55, 0.15);
++  999       border-color: var(--accent-gold);
++ 1000       color: var(--accent-gold);
++ 1001     }
++ 1002 
++ 1003     /* Participant Card */
++ 1004     .participant-card {
++ 1005       display: flex;
++ 1006       align-items: center;
++ 1007       gap: 16px;
++ 1008       padding: 18px;
++ 1009       background: var(--bg-elevated);
++ 1010       border-radius: 16px;
++ 1011       margin-bottom: 14px;
++ 1012       border: 1px solid transparent;
++ 1013       transition: all 0.3s ease;
++ 1014       cursor: pointer;
++ 1015     }
++ 1016 
++ 1017     .participant-card:hover {
++ 1018       border-color: var(--border-color);
++ 1019       transform: translateX(4px);
++ 1020       background: var(--bg-hover);
++ 1021     }
++ 1022 
++ 1023     .participant-avatar {
++ 1024       width: 54px;
++ 1025       height: 54px;
++ 1026       border-radius: 50%;
++ 1027       background: var(--gradient-gold);
++ 1028       display: flex;
++ 1029       align-items: center;
++ 1030       justify-content: center;
++ 1031       font-weight: 700;
++ 1032       font-size: 20px;
++ 1033       color: var(--bg-primary);
++ 1034       box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
++ 1035       flex-shrink: 0;
++ 1036     }
++ 1037 
++ 1038     .participant-info {
++ 1039       flex: 1;
++ 1040       min-width: 0;
++ 1041     }
++ 1042 
++ 1043     .participant-name {
++ 1044       font-weight: 600;
++ 1045       font-size: 16px;
++ 1046       margin-bottom: 5px;
++ 1047     }
++ 1048 
++ 1049     .participant-status {
++ 1050       font-size: 12px;
++ 1051       color: var(--text-muted);
++ 1052       display: flex;
++ 1053       align-items: center;
++ 1054       gap: 8px;
++ 1055     }
++ 1056 
++ 1057     .participant-status .dot {
++ 1058       width: 7px;
++ 1059       height: 7px;
++ 1060       border-radius: 50%;
++ 1061       background: var(--accent-green);
++ 1062       box-shadow: 0 0 8px var(--accent-green);
++ 1063     }
++ 1064 
++ 1065     .participant-videos {
++ 1066       text-align: right;
++ 1067     }
++ 1068 
++ 1069     .participant-videos .count {
++ 1070       font-size: 24px;
++ 1071       font-weight: 700;
++ 1072       font-family: 'Bebas Neue', sans-serif;
++ 1073       color: var(--accent-gold);
++ 1074     }
++ 1075 
++ 1076     .participant-videos .label {
++ 1077       font-size: 10px;
++ 1078       color: var(--text-muted);
++ 1079       text-transform: uppercase;
++ 1080       letter-spacing: 1px;
++ 1081     }
++ 1082 
++ 1083     /* Progress Bar */
++ 1084     .progress-bar {
++ 1085       height: 8px;
++ 1086       background: var(--bg-elevated);
++ 1087       border-radius: 4px;
++ 1088       overflow: hidden;
++ 1089       margin-top: 16px;
++ 1090     }
++ 1091 
++ 1092     .progress-fill {
++ 1093       height: 100%;
++ 1094       background: var(--gradient-gold);
++ 1095       border-radius: 4px;
++ 1096       transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
++ 1097       position: relative;
++ 1098     }
++ 1099 
++ 1100     .progress-fill::after {
++ 1101       content: '';
++ 1102       position: absolute;
++ 1103       top: 0;
++ 1104       left: 0;
++ 1105       right: 0;
++ 1106       bottom: 0;
++ 1107       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
++ 1108       animation: shimmer 2s infinite;
++ 1109     }
++ 1110 
++ 1111     @keyframes shimmer {
++ 1112       0% { transform: translateX(-100%); }
++ 1113       100% { transform: translateX(100%); }
++ 1114     }
++ 1115 
++ 1116     /* Connection Status */
++ 1117     .connection-item {
++ 1118       display: flex;
++ 1119       align-items: center;
++ 1120       justify-content: space-between;
++ 1121       padding: 18px;
++ 1122       background: var(--bg-elevated);
++ 1123       border-radius: 16px;
++ 1124       margin-bottom: 14px;
++ 1125       border: 1px solid transparent;
++ 1126       transition: all 0.3s ease;
++ 1127     }
++ 1128 
++ 1129     .connection-item:hover {
++ 1130       border-color: var(--border-color);
++ 1131     }
++ 1132 
++ 1133     .connection-left {
++ 1134       display: flex;
++ 1135       align-items: center;
++ 1136       gap: 16px;
++ 1137     }
++ 1138 
++ 1139     .connection-icon {
++ 1140       width: 48px;
++ 1141       height: 48px;
++ 1142       border-radius: 14px;
++ 1143       display: flex;
++ 1144       align-items: center;
++ 1145       justify-content: center;
++ 1146       font-size: 22px;
++ 1147     }
++ 1148 
++ 1149     .connection-icon.whatsapp { background: rgba(37, 211, 102, 0.15); color: #25D366; }
++ 1150     .connection-icon.instagram { background: rgba(225, 48, 108, 0.15); color: #E1306C; }
++ 1151     .connection-icon.firebase { background: rgba(255, 202, 40, 0.15); color: #FFCA28; }
++ 1152     .connection-icon.poe { background: rgba(212, 175, 55, 0.15); color: var(--accent-gold); }
++ 1153     .connection-icon.tiktok { background: rgba(255, 0, 80, 0.15); color: #ff0050; }
++ 1154     .connection-icon.youtube { background: rgba(255, 0, 0, 0.15); color: #FF0000; }
++ 1155 
++ 1156     .connection-name {
++ 1157       font-weight: 600;
++ 1158       font-size: 15px;
++ 1159       margin-bottom: 4px;
++ 1160     }
++ 1161 
++ 1162     .connection-status {
++ 1163       font-size: 12px;
++ 1164       color: var(--text-muted);
++ 1165     }
++ 1166 
++ 1167     .connection-toggle {
++ 1168       position: relative;
++ 1169       width: 54px;
++ 1170       height: 30px;
++ 1171       background: var(--bg-card);
++ 1172       border-radius: 15px;
++ 1173       cursor: pointer;
++ 1174       transition: all 0.3s ease;
++ 1175       border: 1px solid var(--border-color);
++ 1176     }
++ 1177 
++ 1178     .connection-toggle.active {
++ 1179       background: var(--accent-green);
++ 1180       border-color: var(--accent-green);
++ 1181     }
++ 1182 
++ 1183     .connection-toggle::after {
++ 1184       content: '';
++ 1185       position: absolute;
++ 1186       top: 3px;
++ 1187       left: 3px;
++ 1188       width: 22px;
++ 1189       height: 22px;
++ 1190       background: white;
++ 1191       border-radius: 50%;
++ 1192       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
++ 1193       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
++ 1194     }
++ 1195 
++ 1196     .connection-toggle.active::after {
++ 1197       left: 27px;
++ 1198     }
++ 1199 
++ 1200     /* Frame Timeline */
++ 1201     .frame-timeline {
++ 1202       display: flex;
++ 1203       gap: 10px;
++ 1204       overflow-x: auto;
++ 1205       padding: 20px 0;
++ 1206       -webkit-overflow-scrolling: touch;
++ 1207     }
++ 1208 
++ 1209     .frame-item {
++ 1210       flex-shrink: 0;
++ 1211       width: 64px;
++ 1212       height: 84px;
++ 1213       background: var(--bg-elevated);
++ 1214       border-radius: 12px;
++ 1215       display: flex;
++ 1216       flex-direction: column;
++ 1217       align-items: center;
++ 1218       justify-content: center;
++ 1219       cursor: pointer;
++ 1220       transition: all 0.25s ease;
++ 1221       border: 2px solid transparent;
++ 1222     }
++ 1223 
++ 1224     .frame-item:hover {
++ 1225       background: var(--bg-hover);
++ 1226       border-color: var(--border-color);
++ 1227     }
++ 1228 
++ 1229     .frame-item.active {
++ 1230       border-color: var(--accent-gold);
++ 1231       background: rgba(212, 175, 55, 0.1);
++ 1232     }
++ 1233 
++ 1234     .frame-item .number {
++ 1235       font-family: 'Bebas Neue', sans-serif;
++ 1236       font-size: 22px;
++ 1237       color: var(--accent-gold);
++ 1238     }
++ 1239 
++ 1240     .frame-item .time {
++ 1241       font-size: 10px;
++ 1242       color: var(--text-muted);
++ 1243     }
++ 1244 
++ 1245     /* Product Grid */
++ 1246     .product-grid {
++ 1247       display: grid;
++ 1248       grid-template-columns: repeat(2, 1fr);
++ 1249       gap: 14px;
++ 1250     }
++ 1251 
++ 1252     .product-card {
++ 1253       background: var(--bg-elevated);
++ 1254       border-radius: 16px;
++ 1255       overflow: hidden;
++ 1256       cursor: pointer;
++ 1257       transition: all 0.3s ease;
++ 1258       border: 1px solid transparent;
++ 1259     }
++ 1260 
++ 1261     .product-card:hover {
++ 1262       border-color: var(--accent-gold);
++ 1263       transform: translateY(-4px);
++ 1264       box-shadow: 0 12px 24px rgba(0,0,0,0.3);
++ 1265     }
++ 1266 
++ 1267     .product-image {
++ 1268       aspect-ratio: 1;
++ 1269       background: var(--bg-card);
++ 1270       display: flex;
++ 1271       align-items: center;
++ 1272       justify-content: center;
++ 1273       position: relative;
++ 1274       overflow: hidden;
++ 1275     }
++ 1276 
++ 1277     .product-image i {
++ 1278       font-size: 36px;
++ 1279       color: var(--text-muted);
++ 1280     }
++ 1281 
++ 1282     .product-image img {
++ 1283       width: 100%;
++ 1284       height: 100%;
++ 1285       object-fit: cover;
++ 1286     }
++ 1287 
++ 1288     .product-info {
++ 1289       padding: 14px;
++ 1290     }
++ 1291 
++ 1292     .product-name {
++ 1293       font-size: 14px;
++ 1294       font-weight: 600;
++ 1295       margin-bottom: 4px;
++ 1296     }
++ 1297 
++ 1298     .product-placement {
++ 1299       font-size: 12px;
++ 1300       color: var(--accent-gold);
++ 1301     }
++ 1302 
++ 1303     /* Chart */
++ 1304     .chart-container {
++ 1305       height: 200px;
++ 1306       background: var(--bg-elevated);
++ 1307       border-radius: 16px;
++ 1308       display: flex;
++ 1309       align-items: flex-end;
++ 1310       justify-content: center;
++ 1311       padding: 20px;
++ 1312       position: relative;
++ 1313       overflow: hidden;
++ 1314     }
++ 1315 
++ 1316     .chart-bars {
++ 1317       display: flex;
++ 1318       align-items: flex-end;
++ 1319       gap: 14px;
++ 1320       height: 100%;
++ 1321       z-index: 1;
++ 1322     }
++ 1323 
++ 1324     .chart-bar {
++ 1325       width: 28px;
++ 1326       background: var(--gradient-gold);
++ 1327       border-radius: 6px 6px 0 0;
++ 1328       transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
++ 1329       position: relative;
++ 1330     }
++ 1331 
++ 1332     .chart-bar::before {
++ 1333       content: '';
++ 1334       position: absolute;
++ 1335       inset: 0;
++ 1336       background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
++ 1337       border-radius: inherit;
++ 1338     }
++ 1339 
++ 1340     .chart-bar:hover {
++ 1341       filter: brightness(1.1);
++ 1342     }
++ 1343 
++ 1344     /* Floating Action Button */
++ 1345     .fab {
++ 1346       position: fixed;
++ 1347       bottom: 28px;
++ 1348       right: 20px;
++ 1349       width: 64px;
++ 1350       height: 64px;
++ 1351       background: var(--gradient-gold);
++ 1352       border-radius: 50%;
++ 1353       display: flex;
++ 1354       align-items: center;
++ 1355       justify-content: center;
++ 1356       font-size: 26px;
++ 1357       color: var(--bg-primary);
++ 1358       cursor: pointer;
++ 1359       box-shadow: 0 8px 32px rgba(212, 175, 55, 0.4);
++ 1360       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
++ 1361       z-index: 50;
++ 1362       border: none;
++ 1363     }
++ 1364 
++ 1365     .fab:hover {
++ 1366       transform: scale(1.1) rotate(90deg);
++ 1367       box-shadow: 0 12px 40px rgba(212, 175, 55, 0.5);
++ 1368     }
++ 1369 
++ 1370     .fab:active {
++ 1371       transform: scale(1.05) rotate(90deg);
++ 1372     }
++ 1373 
++ 1374     /* Modal */
++ 1375     .modal-overlay {
++ 1376       position: fixed;
++ 1377       top: 0;
++ 1378       left: 0;
++ 1379       right: 0;
++ 1380       bottom: 0;
++ 1381       background: rgba(0,0,0,0.85);
++ 1382       backdrop-filter: blur(12px);
++ 1383       -webkit-backdrop-filter: blur(12px);
++ 1384       z-index: 300;
++ 1385       display: flex;
++ 1386       align-items: flex-end;
++ 1387       justify-content: center;
++ 1388       opacity: 0;
++ 1389       visibility: hidden;
++ 1390       transition: all 0.3s ease;
++ 1391     }
++ 1392 
++ 1393     .modal-overlay.active {
++ 1394       opacity: 1;
++ 1395       visibility: visible;
++ 1396     }
++ 1397 
++ 1398     .modal-content {
++ 1399       width: 100%;
++ 1400       max-width: 520px;
++ 1401       max-height: 92vh;
++ 1402       background: var(--bg-secondary);
++ 1403       border-radius: 28px 28px 0 0;
++ 1404       transform: translateY(100%);
++ 1405       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
++ 1406       overflow: hidden;
++ 1407       display: flex;
++ 1408       flex-direction: column;
++ 1409     }
++ 1410 
++ 1411     .modal-overlay.active .modal-content {
++ 1412       transform: translateY(0);
++ 1413     }
++ 1414 
++ 1415     .modal-handle {
++ 1416       width: 44px;
++ 1417       height: 5px;
++ 1418       background: var(--border-color);
++ 1419       border-radius: 3px;
++ 1420       margin: 14px auto 20px;
++ 1421       flex-shrink: 0;
++ 1422     }
++ 1423 
++ 1424     .modal-header {
++ 1425       padding: 0 28px 20px;
++ 1426       border-bottom: 1px solid var(--border-color);
++ 1427       flex-shrink: 0;
++ 1428     }
++ 1429 
++ 1430     .modal-header h3 {
++ 1431       font-family: 'Bebas Neue', sans-serif;
++ 1432       font-size: 28px;
++ 1433       letter-spacing: 2px;
++ 1434     }
++ 1435 
++ 1436     .modal-body {
++ 1437       padding: 28px;
++ 1438       overflow-y: auto;
++ 1439       flex: 1;
++ 1440     }
++ 1441 
++ 1442     .modal-footer {
++ 1443       padding: 20px 28px 36px;
++ 1444       display: flex;
++ 1445       gap: 14px;
++ 1446       border-top: 1px solid var(--border-color);
++ 1447       flex-shrink: 0;
++ 1448     }
++ 1449 
++ 1450     /* AI Generation Modal */
++ 1451     .ai-generation-status {
++ 1452       text-align: center;
++ 1453       padding: 40px 20px;
++ 1454     }
++ 1455 
++ 1456     .ai-generation-status .spinner-large {
++ 1457       width: 64px;
++ 1458       height: 64px;
++ 1459       border: 4px solid var(--border-color);
++ 1460       border-top-color: var(--accent-gold);
++ 1461       border-radius: 50%;
++ 1462       animation: spin 1s linear infinite;
++ 1463       margin: 0 auto 24px;
++ 1464     }
++ 1465 
++ 1466     @keyframes spin {
++ 1467       to { transform: rotate(360deg); }
++ 1468     }
++ 1469 
++ 1470     .ai-generation-status h4 {
++ 1471       font-size: 18px;
++ 1472       margin-bottom: 12px;
++ 1473     }
++ 1474 
++ 1475     .ai-generation-status p {
++ 1476       color: var(--text-muted);
++ 1477       font-size: 14px;
++ 1478       line-height: 1.6;
++ 1479     }
++ 1480 
++ 1481     .ai-result {
++ 1482       background: var(--bg-elevated);
++ 1483       border-radius: 16px;
++ 1484       padding: 20px;
++ 1485       margin-top: 20px;
++ 1486       border: 1px solid var(--border-color);
++ 1487     }
++ 1488 
++ 1489     .ai-result-header {
++ 1490       display: flex;
++ 1491       align-items: center;
++ 1492       gap: 10px;
++ 1493       margin-bottom: 14px;
++ 1494       color: var(--accent-gold);
++ 1495       font-weight: 600;
++ 1496       font-size: 13px;
++ 1497       text-transform: uppercase;
++ 1498       letter-spacing: 1px;
++ 1499     }
++ 1500 
++ 1501     .ai-result-content {
++ 1502       font-size: 14px;
++ 1503       line-height: 1.8;
++ 1504       color: var(--text-secondary);
++ 1505     }
++ 1506 
++ 1507     .ai-result-content p {
++ 1508       margin-bottom: 12px;
++ 1509     }
++ 1510 
++ 1511     .ai-result-content ul, .ai-result-content ol {
++ 1512       padding-left: 20px;
++ 1513       margin-bottom: 12px;
++ 1514     }
++ 1515 
++ 1516     .ai-result-content li {
++ 1517       margin-bottom: 6px;
++ 1518     }
++ 1519 
++ 1520     .ai-result-content strong {
++ 1521       color: var(--text-primary);
++ 1522     }
++ 1523 
++ 1524     .ai-result-content h1, .ai-result-content h2, .ai-result-content h3 {
++ 1525       color: var(--text-primary);
++ 1526       margin: 16px 0 10px;
++ 1527     }
++ 1528 
++ 1529     /* Generated Image */
++ 1530     .generated-image-container {
++ 1531       border-radius: 16px;
++ 1532       overflow: hidden;
++ 1533       margin-top: 16px;
++ 1534       border: 1px solid var(--border-color);
++ 1535     }
++ 1536 
++ 1537     .generated-image-container img {
++ 1538       width: 100%;
++ 1539       display: block;
++ 1540     }
++ 1541 
++ 1542     /* Metric Row */
++ 1543     .metric-row {
++ 1544       display: flex;
++ 1545       justify-content: space-between;
++ 1546       align-items: center;
++ 1547       padding: 16px 0;
++ 1548       border-bottom: 1px solid var(--border-color);
++ 1549     }
++ 1550 
++ 1551     .metric-row:last-child {
++ 1552       border-bottom: none;
++ 1553     }
++ 1554 
++ 1555     .metric-label {
++ 1556       font-size: 14px;
++ 1557       color: var(--text-secondary);
++ 1558     }
++ 1559 
++ 1560     .metric-value {
++ 1561       font-size: 18px;
++ 1562       font-weight: 700;
++ 1563       font-family: 'Bebas Neue', sans-serif;
++ 1564       letter-spacing: 1px;
++ 1565     }
++ 1566 
++ 1567     /* Spinner */
++ 1568     .spinner {
++ 1569       width: 20px;
++ 1570       height: 20px;
++ 1571       border: 2px solid var(--border-color);
++ 1572       border-top-color: var(--accent-gold);
++ 1573       border-radius: 50%;
++ 1574       animation: spin 0.8s linear infinite;
++ 1575     }
++ 1576 
++ 1577     .spinner-inline {
++ 1578       width: 18px;
++ 1579       height: 18px;
++ 1580       border: 2px solid rgba(0,0,0,0.2);
++ 1581       border-top-color: currentColor;
++ 1582       border-radius: 50%;
++ 1583       animation: spin 0.8s linear infinite;
++ 1584     }
++ 1585 
++ 1586     /* Toast */
++ 1587     .toast {
++ 1588       position: fixed;
++ 1589       bottom: 110px;
++ 1590       left: 50%;
++ 1591       transform: translateX(-50%) translateY(120px);
++ 1592       background: var(--bg-card);
++ 1593       border: 1px solid var(--accent-gold);
++ 1594       padding: 16px 28px;
++ 1595       border-radius: 16px;
++ 1596       font-size: 14px;
++ 1597       font-weight: 500;
++ 1598       display: flex;
++ 1599       align-items: center;
++ 1600       gap: 12px;
++ 1601       z-index: 400;
++ 1602       opacity: 0;
++ 1603       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
++ 1604       box-shadow: 0 12px 40px rgba(0,0,0,0.4);
++ 1605       max-width: 90vw;
++ 1606     }
++ 1607 
++ 1608     .toast.show {
++ 1609       opacity: 1;
++ 1610       transform: translateX(-50%) translateY(0);
++ 1611     }
++ 1612 
++ 1613     .toast i {
++ 1614       color: var(--accent-gold);
++ 1615       font-size: 18px;
++ 1616     }
++ 1617 
++ 1618     .toast.error {
++ 1619       border-color: var(--accent-red);
++ 1620     }
++ 1621 
++ 1622     .toast.error i {
++ 1623       color: var(--accent-red);
++ 1624     }
++ 1625 
++ 1626     .toast.success {
++ 1627       border-color: var(--accent-green);
++ 1628     }
++ 1629 
++ 1630     .toast.success i {
++ 1631       color: var(--accent-green);
++ 1632     }
++ 1633 
++ 1634     /* Empty State */
++ 1635     .empty-state {
++ 1636       text-align: center;
++ 1637       padding: 60px 24px;
++ 1638     }
++ 1639 
++ 1640     .empty-state-icon {
++ 1641       width: 100px;
++ 1642       height: 100px;
++ 1643       border-radius: 50%;
++ 1644       background: var(--bg-elevated);
++ 1645       display: flex;
++ 1646       align-items: center;
++ 1647       ntent: center;
++ 1648       margin: 0 auto 24px;
++ 1649     }
++ 1650 
++ 1651     .empty-state-icon i {
++ 1652       font-size: 40px;
++ 1653       color: var(--text-muted);
++ 1654     }
++ 1655 
++ 1656     .empty-state h3 {
++ 1657       font-size: 20px;
++ 1658       margin-bottom: 10px;
++ 1659     }
++ 1660 
++ 1661     .empty-state p {
++ 1662       color: var(--text-muted);
++ 1663       font-size: 14px;x-width: 280px;
++ 1664       margin: 0 auto 28px;
++ 1665       line-height: }
++ 1666 
++ 1667   /* Rules List */
